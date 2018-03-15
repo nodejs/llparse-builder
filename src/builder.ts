@@ -1,7 +1,9 @@
-import { Code } from './code';
+import * as code from './code';
 import * as node from './node';
 import { Property, PropertyType } from './property';
 import { Span } from './span';
+
+export { code, node, Property, PropertyType, Span };
 
 export class Builder {
   private readonly privProperties: Map<string, Property> = new Map();
@@ -14,22 +16,22 @@ export class Builder {
     return new node.Match(name);
   }
 
-  public error(code: number, reason: string): node.Error {
-    return new node.Error(code, reason);
+  public error(errorCode: number, reason: string): node.Error {
+    return new node.Error(errorCode, reason);
   }
 
-  public invoke(code: Code, map: node.IInvokeMap | node.Node | undefined,
+  public invoke(fn: code.Code, map: node.IInvokeMap | node.Node | undefined,
                 otherwise?: node.Node): node.Invoke {
     let res: node.Invoke;
 
     // `.invoke(name)`
     if (map === undefined) {
-      res = new node.Invoke(code, {});
+      res = new node.Invoke(fn, {});
       // `.invoke(name, otherwise)`
     } else if (map instanceof node.Node) {
-      res = new node.Invoke(code, {});
+      res = new node.Invoke(fn, {});
     } else {
-      res = new node.Invoke(code, map as node.IInvokeMap);
+      res = new node.Invoke(fn, map as node.IInvokeMap);
     }
 
     if (otherwise !== undefined) {
@@ -42,8 +44,8 @@ export class Builder {
     return new node.Consume(field);
   }
 
-  public pause(code: number, reason: string): node.Pause {
-    return new node.Pause(code, reason);
+  public pause(errorCode: number, reason: string): node.Pause {
+    return new node.Pause(errorCode, reason);
   }
 
   public property(ty: PropertyType, name: string): void {
@@ -55,7 +57,7 @@ export class Builder {
     this.privProperties.set(name, prop);
   }
 
-  public span(code: Code): Span {
-    return new Span(code);
+  public span(callback: code.Code): Span {
+    return new Span(callback);
   }
 }

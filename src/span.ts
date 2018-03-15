@@ -7,7 +7,7 @@ export class Span {
   private readonly startCache: Map<Node, SpanStart> = new Map();
   private readonly endCache: Map<Node, SpanEnd> = new Map();
 
-  constructor(private readonly code: Code) {
+  constructor(private readonly callback: Code) {
   }
 
   public start(otherwise?: Node) {
@@ -15,7 +15,7 @@ export class Span {
       return this.startCache.get(otherwise)!;
     }
 
-    const res = new SpanStart(this, this.code);
+    const res = new SpanStart(this, this.callback);
     if (otherwise !== undefined) {
       res.otherwise(otherwise);
       this.startCache.set(otherwise, res);
@@ -28,7 +28,7 @@ export class Span {
       return this.endCache.get(otherwise)!;
     }
 
-    const res = new SpanEnd(this, this.code);
+    const res = new SpanEnd(this, this.callback);
     if (otherwise !== undefined) {
       res.otherwise(otherwise);
       this.endCache.set(otherwise, res);
