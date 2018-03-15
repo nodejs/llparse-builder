@@ -11,9 +11,7 @@ export class Builder {
   public readonly transform: transform.Creator = new transform.Creator();
   private readonly privProperties: Map<string, Property> = new Map();
 
-  public get properties(): ReadonlyArray<Property> {
-    return Array.from(this.privProperties.values());
-  }
+  // Various nodes
 
   public node(name: string): node.Match {
     return new node.Match(name);
@@ -51,6 +49,14 @@ export class Builder {
     return new node.Pause(errorCode, reason);
   }
 
+  // Span
+
+  public span(callback: code.Code): Span {
+    return new Span(callback);
+  }
+
+  // Custom property API
+
   public property(ty: PropertyType, name: string): void {
     if (this.privProperties.has(name)) {
       throw new Error(`Duplicate property with a name: "${name}"`);
@@ -60,7 +66,7 @@ export class Builder {
     this.privProperties.set(name, prop);
   }
 
-  public span(callback: code.Code): Span {
-    return new Span(callback);
+  public get properties(): ReadonlyArray<Property> {
+    return Array.from(this.privProperties.values());
   }
 }
