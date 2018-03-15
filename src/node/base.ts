@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import binarySearch = require('binary-search');
 import { Edge } from '../edge';
 
 export abstract class Node {
@@ -34,10 +35,7 @@ export abstract class Node {
   }
 
   public getEdges(): ReadonlyArray<Edge> {
-    // TODO(indutny): binary insert below?
-    return this.privEdges.sort((a, b) => {
-      return a.key!.compare(b.key!);
-    });
+    return this.privEdges;
   }
 
   // Internal
@@ -45,12 +43,9 @@ export abstract class Node {
   protected addEdge(edge: Edge): void {
     assert.notStrictEqual(edge.key, undefined);
 
-    const isDup = this.privEdges.some((other) => {
-      return other.key!.compare(edge.key!) === 0;
-    });
-    if (isDup) {
-      throw new Error('Attempting to create duplicate edge');
-    }
-    this.privEdges.push(edge);
+    const index = binarySearch(this.privEdges, edge, Edge.compare);
+    assert(index < 0, 'Attempting to create duplicate edge');
+
+    this.privEdges.splice(-1 - index, 0, edge);
   }
 }
