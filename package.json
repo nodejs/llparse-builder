@@ -1,6 +1,6 @@
 {
   "name": "llparse-builder",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "description": "Build graph for consumption in LLParse",
   "main": "lib/builder.js",
   "types": "lib/builder.d.ts",
