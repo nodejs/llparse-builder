@@ -51,7 +51,7 @@ export class Builder {
 
   // Span
 
-  public span(callback: code.Code): Span {
+  public span(callback: code.Span): Span {
     return new Span(callback);
   }
 

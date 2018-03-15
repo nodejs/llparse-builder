@@ -1,13 +1,13 @@
 import * as assert from 'assert';
 
-import { Code } from './code';
+import { Span as SpanCallback } from './code';
 import { Node, SpanEnd, SpanStart } from './node';
 
 export class Span {
   private readonly startCache: Map<Node, SpanStart> = new Map();
   private readonly endCache: Map<Node, SpanEnd> = new Map();
 
-  constructor(private readonly callback: Code) {
+  constructor(private readonly callback: SpanCallback) {
   }
 
   public start(otherwise?: Node) {
