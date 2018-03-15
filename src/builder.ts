@@ -2,11 +2,13 @@ import * as code from './code';
 import * as node from './node';
 import { Property, PropertyType } from './property';
 import { Span } from './span';
+import * as transform from './transform';
 
-export { code, node, Property, PropertyType, Span };
+export { code, node, transform, Property, PropertyType, Span };
 
 export class Builder {
   public readonly code: code.Creator = new code.Creator();
+  public readonly transform: transform.Creator = new transform.Creator();
   private readonly privProperties: Map<string, Property> = new Map();
 
   public get properties(): ReadonlyArray<Property> {
