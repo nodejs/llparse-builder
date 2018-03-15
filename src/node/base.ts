@@ -38,6 +38,10 @@ export abstract class Node {
     return this.privEdges;
   }
 
+  public *[Symbol.iterator](): Iterator<Edge> {
+    yield* this.privEdges;
+  }
+
   // Internal
 
   protected addEdge(edge: Edge): void {

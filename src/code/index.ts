@@ -1,10 +1,11 @@
 export { Code } from './base';
+export { Creator } from './creator';
 export { Field } from './field';
 export { FieldValue } from './field-value';
 export { IsEqual } from './is-equal';
 export { Load } from './load';
 export { Match } from './match';
-export { MulAdd } from './mul-add';
+export { IMulAddOptions, MulAdd } from './mul-add';
 export { Or } from './or';
 export { Span } from './span';
 export { Store } from './store';

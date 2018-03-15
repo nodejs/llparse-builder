@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import { Builder } from '../';
+import { Builder } from '../src/builder';
 
 describe('LLParse/Builder', () => {
   let b: Builder;
@@ -28,5 +28,50 @@ describe('LLParse/Builder', () => {
 
     assert(edges[1].noAdvance);
     assert.strictEqual(edges[1].node, end);
+  });
+
+  it('should disallow duplicate edges', () => {
+    const start = b.node('start');
+
+    start.peek('e', start);
+
+    assert.throws(() => {
+      start.peek('e', start);
+    }, /duplicate edge/);
+  });
+
+  it('should disallow select to non-invoke', () => {
+    const start = b.node('start');
+
+    assert.throws(() => {
+      start.select('a', 1, start);
+    }, /value to non-Invoke/);
+  });
+
+  it('should disallow select to match-invoke', () => {
+    const start = b.node('start');
+    const invoke = b.invoke(b.code.match('something'));
+
+    assert.throws(() => {
+      start.select('a', 1, invoke);
+    }, /Invalid.*code signature/);
+  });
+
+  it('should disallow peek to value-invoke', () => {
+    const start = b.node('start');
+    const invoke = b.invoke(b.code.value('something'));
+
+    assert.throws(() => {
+      start.peek('a', invoke);
+    }, /Invalid.*code signature/);
+  });
+
+  it('should allow select to value-invoke', () => {
+    const start = b.node('start');
+    const invoke = b.invoke(b.code.value('something'));
+
+    assert.doesNotThrow(() => {
+      start.select('a', 1, invoke);
+    });
   });
 });

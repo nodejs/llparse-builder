@@ -6,6 +6,7 @@ import { Span } from './span';
 export { code, node, Property, PropertyType, Span };
 
 export class Builder {
+  public readonly code: code.Creator = new code.Creator();
   private readonly privProperties: Map<string, Property> = new Map();
 
   public get properties(): ReadonlyArray<Property> {
@@ -20,7 +21,7 @@ export class Builder {
     return new node.Error(errorCode, reason);
   }
 
-  public invoke(fn: code.Code, map: node.IInvokeMap | node.Node | undefined,
+  public invoke(fn: code.Code, map?: node.IInvokeMap | node.Node,
                 otherwise?: node.Node): node.Invoke {
     let res: node.Invoke;
 
