@@ -15,7 +15,7 @@ export abstract class Node {
       throw new Error('Node already has `otherwise` or `skipTo`');
     }
 
-    this.otherwiseEdge = new Edge(node, false, undefined, undefined);
+    this.otherwiseEdge = new Edge(node, true, undefined, undefined);
     return this;
   }
 
@@ -24,7 +24,7 @@ export abstract class Node {
       throw new Error('Node already has `otherwise` or `skipTo`');
     }
 
-    this.otherwiseEdge = new Edge(node, true, undefined, undefined);
+    this.otherwiseEdge = new Edge(node, false, undefined, undefined);
     return this;
   }
 
