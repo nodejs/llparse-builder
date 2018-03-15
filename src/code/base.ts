@@ -1,4 +1,7 @@
+export type Signature = 'match' | 'value';
+
 export abstract class Code {
-  constructor(public readonly name: string) {
+  constructor(public readonly signature: Signature,
+              public readonly name: string) {
   }
 }
