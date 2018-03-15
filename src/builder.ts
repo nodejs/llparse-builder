@@ -29,7 +29,7 @@ export class Builder {
     } else if (map instanceof node.Node) {
       res = new node.Invoke(code, {});
     } else {
-      res = new node.Invoke(code, map as node.InvokeMap);
+      res = new node.Invoke(code, map as node.IInvokeMap);
     }
 
     if (otherwise !== undefined) {
