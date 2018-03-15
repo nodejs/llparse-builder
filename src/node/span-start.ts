@@ -1,8 +1,8 @@
-import { Span } from '../code';
+import { Span } from '../span';
 import { Node } from './base';
 
 export class SpanStart extends Node {
-  constructor(public readonly span: any, public readonly callback: Span) {
-    super(`span_start_${callback.name}`);
+  constructor(public readonly span: Span) {
+    super(`span_start_${span.callback.name}`);
   }
 }
