@@ -74,4 +74,21 @@ describe('LLParse/Builder', () => {
       start.select('a', 1, invoke);
     });
   });
+
+  it('should create edges for Invoke', () => {
+    const start = b.node('start');
+    const invoke = b.invoke(b.code.value('something'), {
+      '-1': start,
+      '1': start,
+      '10': start,
+    });
+
+    const edges = invoke.getEdges();
+    const keys = edges.map((edge) => edge.key!);
+    assert.deepStrictEqual(keys, [
+      -1,
+      1,
+      10,
+    ]);
+  });
 });

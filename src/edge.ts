@@ -5,12 +5,15 @@ import { Invoke, Node } from './node';
 
 export class Edge {
   public static compare(a: Edge, b: Edge): number {
-    return a.key!.compare(b.key!);
+    if (typeof a.key === 'number') {
+      return a.key - (b.key as number);
+    }
+    return a.key!.compare(b.key as Buffer);
   }
 
   constructor(public readonly node: Node,
               public readonly noAdvance: boolean,
-              public readonly key: Buffer | undefined,
+              public readonly key: Buffer | number | undefined,
               public readonly value: number | undefined) {
     if (node instanceof Invoke) {
       if (value === undefined) {
