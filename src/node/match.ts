@@ -9,7 +9,7 @@ import { Node } from './base';
 export type MatchSingleValue = string | number | Buffer;
 export type MatchValue = MatchSingleValue | ReadonlyArray<MatchSingleValue>;
 export interface IMatchSelect {
-  [key: string]: number;
+  readonly [key: string]: number;
 }
 
 export class Match extends Node {

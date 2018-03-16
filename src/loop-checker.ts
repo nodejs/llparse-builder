@@ -6,8 +6,8 @@ import { Node } from './node';
 type ReachableSet = Set<Node>;
 
 interface IQueueItem {
-  key: Buffer | undefined;
-  node: Node;
+  readonly key: Buffer | undefined;
+  readonly node: Node;
 }
 
 export class LoopChecker {

@@ -5,7 +5,7 @@ import { Edge } from '../edge';
 import { Node } from './base';
 
 export interface IInvokeMap {
-  [key: number]: Node;
+  readonly [key: number]: Node;
 }
 
 export class Invoke extends Node {
