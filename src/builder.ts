@@ -6,6 +6,7 @@ import * as transform from './transform';
 
 export { code, node, transform, Property, PropertyType, Span };
 export { LoopChecker } from './loop-checker';
+export { Edge } from './edge';
 
 export class Builder {
   public readonly code: code.Creator = new code.Creator();
