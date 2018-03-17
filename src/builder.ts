@@ -33,6 +33,7 @@ export class Builder {
       // `.invoke(name, otherwise)`
     } else if (map instanceof node.Node) {
       res = new node.Invoke(fn, {});
+      otherwise = map;
     } else {
       res = new node.Invoke(fn, map as node.IInvokeMap);
     }
