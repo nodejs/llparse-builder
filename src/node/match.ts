@@ -37,7 +37,7 @@ export class Match extends Node {
   public peek(value: MatchValue, next: Node): this {
     if (Array.isArray(value)) {
       for (const subvalue of value) {
-        this.match(subvalue, next);
+        this.peek(subvalue, next);
       }
       return this;
     }
