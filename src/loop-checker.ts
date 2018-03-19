@@ -6,7 +6,7 @@ import { Node } from './node';
 type ReachableSet = Set<Node>;
 
 interface IQueueItem {
-  readonly key: Buffer | undefined;
+  readonly key: number | undefined;
   readonly node: Node;
 }
 
@@ -18,7 +18,7 @@ export class LoopChecker {
 
     while (queue.length !== 0) {
       const item: IQueueItem = queue.pop()!;
-      const lastKey: Buffer | undefined = item.key;
+      const lastKey: number | undefined = item.key;
       const node = item.node;
 
       let edges = Array.from(node);
@@ -35,16 +35,22 @@ export class LoopChecker {
       if (lastKey !== undefined) {
         // Remove all unreachable clauses
         edges = edges.filter((edge) => {
-          return edge.key === undefined ||
-                 typeof edge.key === 'number' ||
-                 edge.key.compare(lastKey) === 0;
+          if (edge.key === undefined) {
+            return true;
+          }
+
+          if (typeof edge.key === 'number') {
+            return true;
+          }
+
+          return edge.key[0] === lastKey;
         });
 
         // See if there is a matching peek clause
         const sameKey = edges.some((edge) => {
           return !edge.noAdvance &&
-                 Buffer.isBuffer(edge.key) &&
-                 edge.key.compare(lastKey) === 0;
+            Buffer.isBuffer(edge.key) &&
+            edge.key[0] === lastKey;
         });
         if (sameKey) {
           continue;
@@ -59,13 +65,13 @@ export class LoopChecker {
           return;
         }
 
-        let nextKey: Buffer | undefined;
+        let nextKey: number | undefined;
 
         // Number edge keys are present in Invoke, otherwise they are buffers
         if (typeof edge.key === 'number' || edge.key === undefined) {
           nextKey = lastKey;
         } else if (edge.key.length === 1) {
-          nextKey = edge.key;
+          nextKey = edge.key[0];
         } else {
           nextKey = lastKey;
         }

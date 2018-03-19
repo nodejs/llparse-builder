@@ -28,9 +28,13 @@ export class Edge {
         'Attempting to pass value to non-Invoke node');
     }
 
-    if (noAdvance && Buffer.isBuffer(key)) {
-      assert.strictEqual(key.length, 1,
-        'Only 1-char keys are allowed in `noAdvance` edges');
+    if (Buffer.isBuffer(key)) {
+      assert(key.length > 0, 'Invalid edge buffer length');
+
+      if (noAdvance) {
+        assert.strictEqual(key.length, 1,
+          'Only 1-char keys are allowed in `noAdvance` edges');
+      }
     }
   }
 }

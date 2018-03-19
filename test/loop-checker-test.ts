@@ -40,7 +40,7 @@ describe('LLParse/LoopChecker', () => {
       .otherwise(b.error(1, 'error'));
 
     a
-      .match('a', invoke)
+      .match('abc', invoke)
       .otherwise(start);
 
     assert.doesNotThrow(() => lc.check(start));
