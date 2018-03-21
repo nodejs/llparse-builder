@@ -1,6 +1,9 @@
 import * as assert from 'assert';
 import { Buffer } from 'buffer';
 
+/**
+ * Internal
+ */
 export function toBuffer(value: number | string | Buffer): Buffer {
   let res: Buffer;
   if (Buffer.isBuffer(value)) {

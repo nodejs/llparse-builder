@@ -6,20 +6,58 @@ import { Transform } from '../transform';
 import { toBuffer } from '../utils';
 import { Node } from './base';
 
+/**
+ * Character/sequence to match.
+ *
+ * May have following types:
+ *
+ * * `number` - for single character
+ * * `string` - for printable character sequence
+ * * `Buffer` - for raw byte sequence
+ */
 export type MatchSingleValue = string | number | Buffer;
+
+/**
+ * Convenience type for passing several characters/sequences to match methods.
+ */
 export type MatchValue = MatchSingleValue | ReadonlyArray<MatchSingleValue>;
+
+/**
+ * A map from characters/sequences to `.select()`'s values. Used for specifying
+ * the value to be passed to `.select()'`s targets.
+ */
 export interface IMatchSelect {
   readonly [key: string]: number;
 }
 
+/**
+ * This node matches characters/sequences and forwards the execution according
+ * to matched character with optional attached value (See `.select()`).
+ */
 export class Match extends Node {
   private transformFn: Transform | undefined;
 
+  /**
+   * Set character transformation function.
+   *
+   * @param transform  Transformation to apply. Can be created with
+   *                   `builder.transform.*()` methods.
+   */
   public transform(transformFn: Transform): this {
     this.transformFn = transformFn;
     return this;
   }
 
+  /**
+   * Match sequence/character and forward execution to `next` on success,
+   * consuming matched bytes of the input.
+   *
+   * No value is attached on such execution forwarding, and the target node
+   * **must not** be an `Invoke` node with a callback expecting the value.
+   *
+   * @param value  Sequence/character to be matched
+   * @param next   Target node to be executed on success.
+   */
   public match(value: MatchValue, next: Node): this {
     if (Array.isArray(value)) {
       for (const subvalue of value) {
@@ -34,6 +72,16 @@ export class Match extends Node {
     return this;
   }
 
+  /**
+   * Match character and forward execution to `next` on success
+   * without consuming one byte of the input.
+   *
+   * No value is attached on such execution forwarding, and the target node
+   * **must not** be an `Invoke` with a callback expecting the value.
+   *
+   * @param value  Character to be matched
+   * @param next   Target node to be executed on success.
+   */
   public peek(value: MatchValue, next: Node): this {
     if (Array.isArray(value)) {
       for (const subvalue of value) {
@@ -51,8 +99,26 @@ export class Match extends Node {
     return this;
   }
 
+  /**
+   * Match character/sequence and forward execution to `next` on success
+   * consumed matched bytes of the input.
+   *
+   * Value is attached on such execution forwarding, and the target node
+   * **must** be an `Invoke` with a callback expecting the value.
+   *
+   * Possible signatures:
+   *
+   * * `.select(key, value [, next ])`
+   * * `.select({ key: value } [, next])`
+   *
+   * @param keyOrMap     Either a sequence to match, or a map from sequences to
+   *                     values
+   * @param valueOrNext  Either an integer value to be forwarded to the target
+   *                     node, or an otherwise node
+   * @param next         Convenience param. Same as calling `.otherwise(...)`
+   */
   public select(keyOrMap: MatchSingleValue | IMatchSelect,
-                valueOrNext: number | Node, next?: Node): this {
+                valueOrNext?: number | Node, next?: Node): this {
     // .select({ key: value, ... }, next)
     if (typeof keyOrMap === 'object') {
       assert(valueOrNext instanceof Node,
@@ -61,7 +127,7 @@ export class Match extends Node {
         'Invalid argument count of `.select()`');
 
       const map: IMatchSelect = keyOrMap as IMatchSelect;
-      next = valueOrNext as Node;
+      next = valueOrNext as Node | undefined;
 
       Object.keys(map).forEach((mapKey) => {
         const numKey: number = mapKey as any;
@@ -87,6 +153,9 @@ export class Match extends Node {
 
   // Limited public use
 
+  /**
+   * Get tranformation function
+   */
   public getTransform(): Transform | undefined {
     return this.transformFn;
   }

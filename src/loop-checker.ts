@@ -10,9 +10,20 @@ interface IQueueItem {
   readonly node: Node;
 }
 
+/**
+ * This class implements a loop checker pass. The goal of this pass is to verify
+ * that the graph doesn't contain infinite loops.
+ */
 export class LoopChecker {
   private reachableMap: Map<Node, ReachableSet> = new Map();
 
+  /**
+   * Run loop checker pass on a graph starting from `root`.
+   *
+   * Throws on failure.
+   *
+   * @param root  Graph root node
+   */
   public check(root: Node): void {
     const queue: IQueueItem[] = [{ key: undefined, node: root }];
 

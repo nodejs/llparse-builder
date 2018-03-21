@@ -2,14 +2,31 @@ import * as assert from 'assert';
 import binarySearch = require('binary-search');
 import { Edge } from '../edge';
 
+/**
+ * Base class for all graph nodes.
+ */
 export abstract class Node {
   private otherwiseEdge: Edge | undefined;
   private privEdges: Edge[] = [];
 
+  /**
+   * @param name  Node name
+   */
   constructor(public readonly name: string) {
     // no-op
   }
 
+  /**
+   * Create an otherwise edge to node `node`.
+   *
+   * This edge is executed when no other edges match current input. No
+   * characters are consumed upon transition.
+   *
+   * NOTE: At most one otherwise (skipping or not) edge can be set, most nodes
+   * except `Error` require it.
+   *
+   * @param node  Target node
+   */
   public otherwise(node: Node): this {
     if (this.otherwiseEdge !== undefined) {
       throw new Error('Node already has `otherwise` or `skipTo`');
@@ -19,6 +36,17 @@ export abstract class Node {
     return this;
   }
 
+  /**
+   * Create a skipping otherwise edge to node `node`.
+   *
+   * This edge is executed when no other edges match current input. Single
+   * character is consumed upon transition.
+   *
+   * NOTE: At most one otherwise (skipping or not) edge can be set, most nodes
+   * except `Error` require it.
+   *
+   * @param node  Target node
+   */
   public skipTo(node: Node): this {
     if (this.otherwiseEdge !== undefined) {
       throw new Error('Node already has `otherwise` or `skipTo`');
@@ -30,14 +58,17 @@ export abstract class Node {
 
   // Limited public use
 
+  /** Get otherwise edge. */
   public getOtherwiseEdge(): Edge | undefined {
     return this.otherwiseEdge;
   }
 
+  /** Get list of all non-otherwise edges. */
   public getEdges(): ReadonlyArray<Edge> {
     return this.privEdges;
   }
 
+  /** Get iterator through all non-otherwise edges. */
   public *[Symbol.iterator](): Iterator<Edge> {
     yield* this.privEdges;
   }
