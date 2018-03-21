@@ -14,7 +14,9 @@ export class Creator {
    *
    * C signature of callback must be:
    *
-   * `int name(llparse_t* state, const char* p, const char* endp)`
+   * ```c
+   * int name(llparse_t* state, const char* p, const char* endp)
+   * ```
    *
    * Where `llparse_t` is parser state's type name.
    *
@@ -32,7 +34,9 @@ export class Creator {
    *
    * C signature of callback must be:
    *
-   * `int name(llparse_t* state, const char* p, const char* endp, int value)`
+   * ```c
+   * int name(llparse_t* state, const char* p, const char* endp, int value)
+   * ```
    *
    * Where `llparse_t` is parser state's type name.
    *
@@ -49,7 +53,9 @@ export class Creator {
    *
    * C signature of callback must be:
    *
-   * `int name(llparse_t* state, const char* p, const char* endp)`
+   * ```c
+   * int name(llparse_t* state, const char* p, const char* endp)
+   * ```
    *
    * NOTE: non-zero return value is treated as resumable error.
    *
