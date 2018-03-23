@@ -10,6 +10,17 @@ describe('LLParse/LoopChecker', () => {
     lc = new LoopChecker();
   });
 
+  it('should detect shallow loops', () => {
+    const start = b.node('start');
+
+    start
+      .otherwise(start);
+
+    assert.throws(() => {
+      lc.check(start);
+    }, /detected in "start".*"start"/);
+  });
+
   it('should detect loops', () => {
     const start = b.node('start');
     const a = b.node('a');
@@ -26,6 +37,21 @@ describe('LLParse/LoopChecker', () => {
     assert.throws(() => {
       lc.check(start);
     }, /detected in "start".*"invoke_nop"/);
+  });
+
+  it('should detect loops through keys', () => {
+    const start = b.node('start');
+    const loop = b.node('loop');
+
+    start
+      .peek('a', loop);
+
+    loop
+      .otherwise(loop);
+
+    assert.throws(() => {
+      lc.check(start);
+    }, /detected in "loop".*"loop"/);
   });
 
   it('should ignore loops through `peek` to `match`', () => {
