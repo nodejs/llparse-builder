@@ -88,4 +88,31 @@ describe('LLParse/LoopChecker', () => {
 
     assert.doesNotThrow(() => lc.check(start));
   });
+
+  it('should ignore loops with multi `peek`/`match`', () => {
+    const start = b.node('start');
+    const another = b.node('another');
+
+    const NUM: ReadonlyArray<string> = [
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    ];
+
+    const ALPHA: ReadonlyArray<string> = [
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+      'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+      'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    ];
+
+    start
+      .match(ALPHA, start)
+      .peek(NUM, another)
+      .skipTo(start);
+
+    another
+      .match(NUM, another)
+      .otherwise(start);
+
+    assert.doesNotThrow(() => lc.check(start));
+  });
 });

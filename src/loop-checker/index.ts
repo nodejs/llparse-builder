@@ -32,35 +32,39 @@ export class LoopChecker {
 
     const nodes = r.build(root);
 
-    // Set initial lattice value for all nodes
+    for (const node of nodes) {
+      debug('checking loops starting from %j', node.name);
+
+      // Set initial lattice value for all nodes
+      this.clear(nodes);
+
+      // Mark root as reachable with any value
+      this.lattice.set(node, ANY_VALUE);
+
+      // Raise lattice values
+      let changed: Set<Node> = new Set([ root ]);
+      while (changed.size !== 0) {
+        if (debug.enabled) {
+          debug('changed %j', Array.from(changed).map((other) => other.name));
+        }
+
+        const next: Set<Node> = new Set();
+        for (const changedNode of changed) {
+          this.propagate(changedNode, next);
+        }
+        changed = next;
+      }
+
+      debug('lattice stabilized');
+
+      // Visit nodes and walk through reachable edges to detect loops
+      this.visit(node, []);
+    }
+  }
+
+  private clear(nodes: ReadonlyArray<Node>): void {
     for (const node of nodes) {
       this.lattice.set(node, EMPTY_VALUE);
-    }
-
-    // Mark root as reachable with any value
-    this.lattice.set(root, ANY_VALUE);
-
-    // Raise lattice values
-    let changed: Set<Node> = new Set([ root ]);
-    while (changed.size !== 0) {
-      if (debug.enabled) {
-        debug('changed %j', Array.from(changed).map((node) => node.name));
-      }
-
-      const next: Set<Node> = new Set();
-      for (const node of changed) {
-        this.propagate(node, next);
-      }
-      changed = next;
-    }
-
-    debug('lattice stabilized');
-
-    // Visit nodes and walk through reachable edges to detect loops
-    // TODO(indutny): optimize if needed
-    for (const node of nodes) {
-      debug('check node %j', node.name);
-      this.visit(node, []);
     }
   }
 
@@ -78,20 +82,23 @@ export class LoopChecker {
       }
     }
 
+    const keysByTarget: Map<Node, Lattice> = new Map();
     // Propagate value through `.peek()`/`.otherwise()` edges
-    // TODO(indutny): optimize if needed
     for (const edge of node.getAllEdges()) {
       if (!edge.noAdvance) {
         continue;
       }
 
-      let targetValue = this.lattice.get(edge.node)!;
+      let targetValue: Lattice;
+      if (keysByTarget.has(edge.node)) {
+        targetValue = keysByTarget.get(edge.node)!;
+      } else {
+        targetValue = this.lattice.get(edge.node)!;
+      }
 
       // `otherwise` or `Invoke`'s edges
       if (edge.key === undefined || typeof edge.key === 'number') {
         targetValue = targetValue.union(value);
-        debug('node %j propagates %j to %j', node.name, targetValue,
-          edge.node.name);
       } else {
         // `.peek()`
         const edgeValue = new Lattice([ edge.key[0] ]).intersect(value);
@@ -100,10 +107,15 @@ export class LoopChecker {
         }
 
         targetValue = targetValue.union(edgeValue);
-        debug('node %j propagates %j to %j through peek', node.name,
-          targetValue, edge.node.name);
       }
-      this.update(edge.node, targetValue, changed);
+
+      keysByTarget.set(edge.node, targetValue);
+    }
+
+    for (const [ child, childValue ] of keysByTarget) {
+      debug('node %j propagates %j to %j', node.name, childValue,
+        child.name);
+      this.update(child, childValue, changed);
     }
   }
 
@@ -135,12 +147,6 @@ export class LoopChecker {
       }
 
       terminated.push(edge.key[0]);
-      debug('node %j propagates %j to %j', node.name, ANY_VALUE,
-        edge.node.name);
-
-      // Propagate `any` to those nodes since they can get any character
-      this.update(edge.node, ANY_VALUE, changed);
-
     }
 
     const result = new Lattice(terminated);
