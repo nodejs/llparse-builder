@@ -68,6 +68,16 @@ export abstract class Node {
     return this.privEdges;
   }
 
+  /** Get list of all edges (including otherwise, if present). */
+  public getAllEdges(): ReadonlyArray<Edge> {
+    const res = this.privEdges;
+    if (this.otherwiseEdge === undefined) {
+      return res;
+    } else {
+      return res.concat(this.otherwiseEdge);
+    }
+  }
+
   /** Get iterator through all non-otherwise edges. */
   public *[Symbol.iterator](): Iterator<Edge> {
     yield* this.privEdges;

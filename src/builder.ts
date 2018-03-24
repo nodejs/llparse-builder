@@ -5,8 +5,9 @@ import { Span } from './span';
 import * as transform from './transform';
 
 export { code, node, transform, Property, PropertyType, Span };
-export { LoopChecker } from './loop-checker';
 export { Edge } from './edge';
+export { LoopChecker } from './loop-checker';
+export { Reachability } from './reachability';
 
 /**
  * Construct parsing graph for later use in `llparse`.

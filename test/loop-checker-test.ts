@@ -18,7 +18,7 @@ describe('LLParse/LoopChecker', () => {
 
     assert.throws(() => {
       lc.check(start);
-    }, /detected in "start".*"start"/);
+    }, /Detected loop in "start".*"start"/);
   });
 
   it('should detect loops', () => {
@@ -36,22 +36,24 @@ describe('LLParse/LoopChecker', () => {
 
     assert.throws(() => {
       lc.check(start);
-    }, /detected in "start".*"invoke_nop"/);
+    }, /Detected loop in "a".*"a" -> "invoke_nop"/);
   });
 
-  it('should detect loops through keys', () => {
+  it('should detect seemingly unreachable keys', () => {
     const start = b.node('start');
     const loop = b.node('loop');
 
     start
-      .peek('a', loop);
+      .peek('a', loop)
+      .otherwise(b.error(1, 'error'));
 
     loop
+      .match('a', loop)
       .otherwise(loop);
 
     assert.throws(() => {
       lc.check(start);
-    }, /detected in "loop".*"loop"/);
+    }, /Detected loop in "loop" through.*"loop"/);
   });
 
   it('should ignore loops through `peek` to `match`', () => {
