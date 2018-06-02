@@ -7,7 +7,7 @@ import * as transform from './transform';
 export { code, node, transform, Property, PropertyType, Span };
 export { Edge } from './edge';
 export { LoopChecker } from './loop-checker';
-export { SpanAllocator } from './span-allocator';
+export { ISpanAllocatorResult, SpanAllocator } from './span-allocator';
 export { Reachability } from './reachability';
 
 /**
