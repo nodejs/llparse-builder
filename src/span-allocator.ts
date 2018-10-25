@@ -65,8 +65,8 @@ export class SpanAllocator {
           // Disallow loops
           if (edgeNode instanceof SpanStart) {
             assert.notStrictEqual(id(edgeNode), span,
-              `Detected loop in span "${span.callback.name}", while walking ` +
-              `from "${node.name}"`);
+              `Detected loop in span "${span.callback.name}", started ` +
+              `at "${node.name}"`);
           }
 
           const edgeActive = activeMap.get(edgeNode)!;
