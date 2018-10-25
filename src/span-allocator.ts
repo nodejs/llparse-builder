@@ -65,7 +65,8 @@ export class SpanAllocator {
           // Disallow loops
           if (edgeNode instanceof SpanStart) {
             assert.notStrictEqual(id(edgeNode), span,
-              `Detected loop in span "${span.callback.name}"`);
+              `Detected loop in span "${span.callback.name}", while walking ` +
+              `from "${node.name}" to "${edgeNode.name}"`);
           }
 
           const edgeActive = activeMap.get(edgeNode)!;
@@ -100,13 +101,15 @@ export class SpanAllocator {
         const edgeSpans = info.active.get(edge.node)!;
         for (const subSpan of edgeSpans) {
           assert(spans.has(subSpan),
-            `Unmatched span end for "${subSpan.callback.name}"`);
+            `Unmatched span end for "${subSpan.callback.name}" ` +
+            `at "${edge.node.name}"`);
         }
 
         if (edge.node instanceof SpanEnd) {
           const span = id(edge.node);
           assert(spans.has(span),
-            `Unmatched span end for "${span.callback.name}"`);
+            `Unmatched span end for "${span.callback.name}" ` +
+            `at "${edge.node.name}"`);
         }
       }
     }
