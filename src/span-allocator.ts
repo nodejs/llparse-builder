@@ -101,7 +101,8 @@ export class SpanAllocator {
         const edgeSpans = info.active.get(edge.node)!;
         for (const subSpan of edgeSpans) {
           assert(spans.has(subSpan),
-            `Unmatched span end for "${subSpan.callback.name}"`);
+            `Unmatched span end for "${subSpan.callback.name}" ` +
+            `at "${edge.node.name}", coming from "${node.name}"`);
         }
 
         if (edge.node instanceof SpanEnd) {
