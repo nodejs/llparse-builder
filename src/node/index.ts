@@ -6,3 +6,4 @@ export { Match } from './match';
 export { Pause } from './pause';
 export { SpanStart } from './span-start';
 export { SpanEnd } from './span-end';
+export { Int } from './int';
