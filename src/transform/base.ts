@@ -1,4 +1,4 @@
-export type TransformName = 'to_lower_unsafe';
+export type TransformName = 'to_lower_unsafe' | 'to_lower';
 
 /**
  * Character transformation.

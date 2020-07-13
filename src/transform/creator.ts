@@ -1,4 +1,5 @@
 import { Transform } from './base';
+import { ToLower } from './to-lower';
 import { ToLowerUnsafe } from './to-lower-unsafe';
 
 /**
@@ -16,5 +17,12 @@ export class Creator {
    */
   public toLowerUnsafe(): Transform {
     return new ToLowerUnsafe();
+  }
+
+  /**
+   * Safe transform to lowercase.
+   */
+  public toLower(): Transform {
+    return new ToLower();
   }
 }
