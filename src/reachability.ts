@@ -26,6 +26,6 @@ export class Reachability {
         queue.push(otherwise.node);
       }
     }
-    return Array.from(res);
+    return Array.from(res) as ReadonlyArray<Node>;
   }
 }
