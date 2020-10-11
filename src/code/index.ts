@@ -7,6 +7,7 @@ export { Load } from './load';
 export { Match } from './match';
 export { IMulAddOptions, MulAdd } from './mul-add';
 export { Or } from './or';
+export { And } from './and';
 export { Span } from './span';
 export { Store } from './store';
 export { Test } from './test';

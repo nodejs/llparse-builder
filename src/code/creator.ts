@@ -147,6 +147,19 @@ export class Creator {
   /**
    * Intrinsic operation.
    *
+   *   state[field] &= value
+   *   return 0;
+   *
+   * @param field Property name
+   * @param value Integer value
+   */
+  public and(field: string, value: number): code.And {
+    return new code.And(field, value);
+  }
+
+  /**
+   * Intrinsic operation.
+   *
    *   state[field] |= value
    *   return 0;
    *
