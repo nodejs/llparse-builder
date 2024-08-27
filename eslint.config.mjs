@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ["build", "lib", "examples", "bench"] },
+  { ignores: ["build", ".tmptest", "lib", "examples", "bench"] },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   ...tseslint.configs.stylistic,
