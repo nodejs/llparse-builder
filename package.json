@@ -13,7 +13,7 @@
     "clean": "rm -rf lib && rm -rf .tmptest",
     "prepare": "npm run clean && npm run build",
     "lint": "eslint",
-    "lint-fix": "eslint --fix",
+    "lint:fix": "eslint --fix",
     "test": "borp test/*.test.ts"
   },
   "repository": {

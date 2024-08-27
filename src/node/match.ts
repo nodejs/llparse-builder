@@ -20,15 +20,13 @@ export type MatchSingleValue = string | number | Buffer;
 /**
  * Convenience type for passing several characters/sequences to match methods.
  */
-export type MatchValue = MatchSingleValue | ReadonlyArray<MatchSingleValue>;
+export type MatchValue = MatchSingleValue | readonly MatchSingleValue[];
 
 /**
  * A map from characters/sequences to `.select()`'s values. Used for specifying
  * the value to be passed to `.select()'`s targets.
  */
-export interface IMatchSelect {
-  readonly [key: string]: number;
-}
+export type IMatchSelect = Readonly<Record<string, number>>;
 
 /**
  * This node matches characters/sequences and forwards the execution according
@@ -130,7 +128,7 @@ export class Match extends Node {
       next = valueOrNext as Node | undefined;
 
       Object.keys(map).forEach((mapKey) => {
-        const numKey: number = mapKey as any;
+        const numKey: number = mapKey as unknown as number;
 
         this.select(numKey, map[numKey]!, next);
       });

@@ -7,7 +7,7 @@ export class Reachability {
   /**
    * Build and return list of reachable nodes.
    */
-  public build(root: Node): ReadonlyArray<Node> {
+  public build(root: Node): readonly Node[] {
     const res = new Set();
     const queue = [ root ];
     while (queue.length !== 0) {
@@ -26,6 +26,6 @@ export class Reachability {
         queue.push(otherwise.node);
       }
     }
-    return Array.from(res) as ReadonlyArray<Node>;
+    return Array.from(res) as readonly Node[];
   }
 }

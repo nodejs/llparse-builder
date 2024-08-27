@@ -19,7 +19,7 @@ export class Pause extends Node {
    * `.skipTo()` is not supported on this type of node, please use
    * `.otherwise()`
    */
-  public skipTo(node: Node): this {
+  public skipTo(): this {
     throw new Error('Not supported, please use `pause.otherwise()`');
   }
 }

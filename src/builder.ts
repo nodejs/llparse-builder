@@ -25,7 +25,7 @@ export class Builder {
    */
   public readonly transform: transform.Creator = new transform.Creator();
 
-  private readonly privProperties: Map<string, Property> = new Map();
+  private readonly privProperties = new Map<string, Property>();
 
   // Various nodes
 
@@ -141,7 +141,7 @@ export class Builder {
   /**
    * Return list of all allocated properties in parser's state.
    */
-  public get properties(): ReadonlyArray<Property> {
+  public get properties(): readonly Property[] {
     return Array.from(this.privProperties.values());
   }
 }

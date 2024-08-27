@@ -11,14 +11,14 @@ type SpanSet = Set<Span>;
 
 interface ISpanActiveInfo {
   readonly active: Map<Node, SpanSet>;
-  readonly spans: ReadonlyArray<Span>;
+  readonly spans: readonly Span[];
 }
 
 type SpanOverlap = Map<Span, SpanSet>;
 
 export interface ISpanAllocatorResult {
   readonly colors: ReadonlyMap<Span, number>;
-  readonly concurrency: ReadonlyArray<ReadonlyArray<Span> >;
+  readonly concurrency: readonly (readonly Span[])[];
   readonly max: number;
 }
 
@@ -36,11 +36,11 @@ export class SpanAllocator {
     return this.color(info.spans, overlap);
   }
 
-  private computeActive(nodes: ReadonlyArray<Node>): ISpanActiveInfo {
-    const activeMap: Map<Node, SpanSet> = new Map();
+  private computeActive(nodes: readonly Node[]): ISpanActiveInfo {
+    const activeMap = new Map<Node, SpanSet>();
     nodes.forEach((node) => activeMap.set(node, new Set()));
 
-    const queue: Set<Node> = new Set(nodes);
+    const queue = new Set<Node>(nodes);
     const spans: SpanSet = new Set();
     for (const node of queue) {
       queue.delete(node);
@@ -134,10 +134,10 @@ export class SpanAllocator {
     return overlap;
   }
 
-  private color(spans: ReadonlyArray<Span>, overlapMap: SpanOverlap)
+  private color(spans: readonly Span[], overlapMap: SpanOverlap)
     : ISpanAllocatorResult {
     let max = -1;
-    const colors: Map<Span, number> = new Map();
+    const colors = new Map<Span, number>();
 
     const allocate = (span: Span): number => {
       if (colors.has(span)) {
@@ -147,7 +147,7 @@ export class SpanAllocator {
       const overlap = overlapMap.get(span)!;
 
       // See which colors are already used
-      const used: Set<number> = new Set();
+      const used = new Set<number>();
       for (const subSpan of overlap) {
         if (colors.has(subSpan)) {
           used.add(colors.get(subSpan)!);
@@ -166,7 +166,7 @@ export class SpanAllocator {
       return i;
     };
 
-    const map: Map<Span, number> = new Map();
+    const map = new Map<Span, number>();
 
     spans.forEach((span) => map.set(span, allocate(span)));
 
