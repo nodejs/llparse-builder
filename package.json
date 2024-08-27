@@ -12,7 +12,8 @@
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf lib && rm -rf .tmptest",
     "prepare": "npm run clean && npm run build",
-    "lint": "tslint -c tslint.json src/*.ts src/**/*.ts src/**/**/*.ts test/*.ts",
+    "lint": "eslint",
+    "lint-fix": "eslint --fix",
     "test": "borp test/*.test.ts"
   },
   "repository": {
@@ -32,9 +33,15 @@
   },
   "homepage": "https://github.com/indutny/llparse-builder#readme",
   "devDependencies": {
-    "@types/node": "^20.16.1",
+    "@eslint/js": "10.0.0",
+    "@stylistic/eslint-plugin": "^2.1.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.1",
+    "@typescript-eslint/parser": "^8.0.1",
     "borp": "^0.17.0",
-    "tslint": "^5.20.1",
+    "eslint": "^9.9.0",
+    "typescript-eslint": "^8.0.1",
     "typescript": "^5.5.4"
   }
 }
