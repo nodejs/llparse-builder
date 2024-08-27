@@ -1,5 +1,4 @@
-import * as assert from 'assert';
-
+import { beforeEach, describe, it, type TestContext } from 'node:test';
 import { Builder, LoopChecker } from '../src/builder';
 
 describe('LLParse/LoopChecker', () => {
@@ -10,18 +9,18 @@ describe('LLParse/LoopChecker', () => {
     lc = new LoopChecker();
   });
 
-  it('should detect shallow loops', () => {
+  it('should detect shallow loops', (t: TestContext) => {
     const start = b.node('start');
 
     start
       .otherwise(start);
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       lc.check(start);
     }, /Detected loop in "start".*"start"/);
   });
 
-  it('should detect loops', () => {
+  it('should detect loops', (t: TestContext) => {
     const start = b.node('start');
     const a = b.node('a');
     const invoke = b.invoke(b.code.match('nop'), {
@@ -34,12 +33,12 @@ describe('LLParse/LoopChecker', () => {
 
     a.otherwise(invoke);
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       lc.check(start);
     }, /Detected loop in "a".*"a" -> "invoke_nop"/);
   });
 
-  it('should detect seemingly unreachable keys', () => {
+  it('should detect seemingly unreachable keys', (t: TestContext) => {
     const start = b.node('start');
     const loop = b.node('loop');
 
@@ -51,12 +50,12 @@ describe('LLParse/LoopChecker', () => {
       .match('a', loop)
       .otherwise(loop);
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       lc.check(start);
     }, /Detected loop in "loop" through.*"loop"/);
   });
 
-  it('should ignore loops through `peek` to `match`', () => {
+  it('should ignore loops through `peek` to `match`', (t: TestContext) => {
     const start = b.node('start');
     const a = b.node('a');
     const invoke = b.invoke(b.code.match('nop'), {
@@ -71,10 +70,10 @@ describe('LLParse/LoopChecker', () => {
       .match('abc', invoke)
       .otherwise(start);
 
-    assert.doesNotThrow(() => lc.check(start));
+    t.assert.doesNotThrow(() => lc.check(start));
   });
 
-  it('should ignore irrelevant `peek`s', () => {
+  it('should ignore irrelevant `peek`s', (t: TestContext) => {
     const start = b.node('start');
     const a = b.node('a');
 
@@ -86,10 +85,10 @@ describe('LLParse/LoopChecker', () => {
       .peek('b', start)
       .otherwise(b.error(1, 'error'));
 
-    assert.doesNotThrow(() => lc.check(start));
+    t.assert.doesNotThrow(() => lc.check(start));
   });
 
-  it('should ignore loops with multi `peek`/`match`', () => {
+  it('should ignore loops with multi `peek`/`match`', (t: TestContext) => {
     const start = b.node('start');
     const another = b.node('another');
 
@@ -113,6 +112,6 @@ describe('LLParse/LoopChecker', () => {
       .match(NUM, another)
       .otherwise(start);
 
-    assert.doesNotThrow(() => lc.check(start));
+    t.assert.doesNotThrow(() => lc.check(start));
   });
 });

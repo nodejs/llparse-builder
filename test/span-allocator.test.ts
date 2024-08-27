@@ -1,5 +1,4 @@
-import * as assert from 'assert';
-
+import { beforeEach, describe, it, type TestContext } from 'node:test';
 import { Builder, SpanAllocator } from '../src/builder';
 
 describe('LLParse/LoopChecker', () => {
@@ -10,7 +9,7 @@ describe('LLParse/LoopChecker', () => {
     sa = new SpanAllocator();
   });
 
-  it('should allocate single span', () => {
+  it('should allocate single span', (t: TestContext) => {
     const span = b.span(b.code.span('span'));
     const start = b.node('start');
     const body = b.node('body');
@@ -23,16 +22,16 @@ describe('LLParse/LoopChecker', () => {
 
     const res = sa.allocate(start);
 
-    assert.strictEqual(res.max, 0);
+    t.assert.strictEqual(res.max, 0);
 
-    assert.strictEqual(res.concurrency.length, 1);
-    assert.ok(res.concurrency[0].includes(span));
+    t.assert.strictEqual(res.concurrency.length, 1);
+    t.assert.ok(res.concurrency[0].includes(span));
 
-    assert.strictEqual(res.colors.size, 1);
-    assert.strictEqual(res.colors.get(span), 0);
+    t.assert.strictEqual(res.colors.size, 1);
+    t.assert.strictEqual(res.colors.get(span), 0);
   });
 
-  it('should allocate overlapping spans', () => {
+  it('should allocate overlapping spans', (t: TestContext) => {
     const span1 = b.span(b.code.span('span1'));
     const span2 = b.span(b.code.span('span2'));
 
@@ -51,18 +50,18 @@ describe('LLParse/LoopChecker', () => {
 
     const res = sa.allocate(start);
 
-    assert.strictEqual(res.max, 1);
+    t.assert.strictEqual(res.max, 1);
 
-    assert.strictEqual(res.concurrency.length, 2);
-    assert.ok(res.concurrency[0].includes(span1));
-    assert.ok(res.concurrency[1].includes(span2));
+    t.assert.strictEqual(res.concurrency.length, 2);
+    t.assert.ok(res.concurrency[0].includes(span1));
+    t.assert.ok(res.concurrency[1].includes(span2));
 
-    assert.strictEqual(res.colors.size, 2);
-    assert.strictEqual(res.colors.get(span1), 0);
-    assert.strictEqual(res.colors.get(span2), 1);
+    t.assert.strictEqual(res.colors.size, 2);
+    t.assert.strictEqual(res.colors.get(span1), 0);
+    t.assert.strictEqual(res.colors.get(span2), 1);
   });
 
-  it('should allocate non-overlapping spans', () => {
+  it('should allocate non-overlapping spans', (t: TestContext) => {
     const span1 = b.span(b.code.span('span1'));
     const span2 = b.span(b.code.span('span2'));
 
@@ -82,18 +81,18 @@ describe('LLParse/LoopChecker', () => {
 
     const res = sa.allocate(start);
 
-    assert.strictEqual(res.max, 0);
+    t.assert.strictEqual(res.max, 0);
 
-    assert.strictEqual(res.concurrency.length, 1);
-    assert.ok(res.concurrency[0].includes(span1));
-    assert.ok(res.concurrency[0].includes(span2));
+    t.assert.strictEqual(res.concurrency.length, 1);
+    t.assert.ok(res.concurrency[0].includes(span1));
+    t.assert.ok(res.concurrency[0].includes(span2));
 
-    assert.strictEqual(res.colors.size, 2);
-    assert.strictEqual(res.colors.get(span1), 0);
-    assert.strictEqual(res.colors.get(span2), 0);
+    t.assert.strictEqual(res.colors.size, 2);
+    t.assert.strictEqual(res.colors.get(span1), 0);
+    t.assert.strictEqual(res.colors.get(span2), 0);
   });
 
-  it('should throw on loops', () => {
+  it('should throw on loops', (t: TestContext) => {
     const span = b.span(b.code.span('span_name'));
 
     const start = b.node('start');
@@ -101,21 +100,21 @@ describe('LLParse/LoopChecker', () => {
     start
       .otherwise(span.start(start));
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       sa.allocate(start);
     }, /loop.*span_name/);
   });
 
-  it('should throw on unmatched ends', () => {
+  it('should throw on unmatched ends', (t) => {
     const start = b.node('start');
     const span = b.span(b.code.span('on_data'));
 
     start.otherwise(span.end().skipTo(start));
 
-    assert.throws(() => sa.allocate(start), /unmatched.*on_data/i);
+    t.assert.throws(() => sa.allocate(start), /unmatched.*on_data/i);
   });
 
-  it('should throw on branched unmatched ends', () => {
+  it('should throw on branched unmatched ends', (t: TestContext) => {
     const start = b.node('start');
     const end = b.node('end');
     const span = b.span(b.code.span('on_data'));
@@ -128,10 +127,10 @@ describe('LLParse/LoopChecker', () => {
     end
       .otherwise(span.end(start));
 
-    assert.throws(() => sa.allocate(start), /unmatched.*on_data/i);
+    t.assert.throws(() => sa.allocate(start), /unmatched.*on_data/i);
   });
 
-  it('should propagate through the Invoke map', () => {
+  it('should propagate through the Invoke map', (t) => {
     const start = b.node('start');
     const span = b.span(b.code.span('llparse__on_data'));
 
@@ -141,6 +140,6 @@ describe('LLParse/LoopChecker', () => {
       0: span.end().skipTo(start),
     }, span.end().skipTo(start)));
 
-    assert.doesNotThrow(() => sa.allocate(span.start(start)));
+    t.assert.doesNotThrow(() => sa.allocate(span.start(start)));
   });
 });
