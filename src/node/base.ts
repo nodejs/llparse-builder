@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import binarySearch = require('binary-search');
+import { binarySearch } from '../binary-search/binary-search';
 import { Edge } from '../edge';
 
 /**
