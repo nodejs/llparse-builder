@@ -14,10 +14,10 @@ const ANY_VALUE = new Lattice('any');
  * that the graph doesn't contain infinite loops.
  */
 export class LoopChecker {
-  private readonly lattice: Map<Node, Lattice> = new Map();
+  private readonly lattice = new Map<Node, Lattice>();
 
   // Just a cache of terminated keys
-  private readonly terminatedCache: Map<Node, Lattice> = new Map();
+  private readonly terminatedCache = new Map<Node, Lattice>();
 
   /**
    * Run loop checker pass on a graph starting from `root`.
@@ -41,13 +41,13 @@ export class LoopChecker {
       this.lattice.set(node, ANY_VALUE);
 
       // Raise lattice values
-      let changed: Set<Node> = new Set([ root ]);
+      let changed = new Set<Node>([ root ]);
       while (changed.size !== 0) {
         if (debug.enabled) {
           debug('changed %j', Array.from(changed).map((other) => other.name));
         }
 
-        const next: Set<Node> = new Set();
+        const next = new Set<Node>();
         for (const changedNode of changed) {
           this.propagate(changedNode, next);
         }
@@ -61,7 +61,7 @@ export class LoopChecker {
     }
   }
 
-  private clear(nodes: ReadonlyArray<Node>): void {
+  private clear(nodes: readonly Node[]): void {
     for (const node of nodes) {
       this.lattice.set(node, EMPTY_VALUE);
     }
@@ -72,7 +72,7 @@ export class LoopChecker {
     debug('propagate(%j), initial value %j', node.name, value);
 
     // Terminate values that are consumed by `match`/`select`
-    const terminated = this.terminate(node, value, changed);
+    const terminated = this.terminate(node);
     if (!terminated.isEqual(EMPTY_VALUE)) {
       debug('node %j terminates %j', node.name, terminated);
       value = value.subtract(terminated);
@@ -81,7 +81,7 @@ export class LoopChecker {
       }
     }
 
-    const keysByTarget: Map<Node, Lattice> = new Map();
+    const keysByTarget = new Map<Node, Lattice>();
     // Propagate value through `.peek()`/`.otherwise()` edges
     for (const edge of node.getAllEdges()) {
       if (!edge.noAdvance) {
@@ -129,7 +129,7 @@ export class LoopChecker {
     return true;
   }
 
-  private terminate(node: Node, value: Lattice, changed: Set<Node>): Lattice {
+  private terminate(node: Node): Lattice {
     if (this.terminatedCache.has(node)) {
       return this.terminatedCache.get(node)!;
     }
@@ -153,7 +153,7 @@ export class LoopChecker {
     return result;
   }
 
-  private visit(node: Node, path: ReadonlyArray<Node>): void {
+  private visit(node: Node, path: readonly Node[]): void {
     let value = this.lattice.get(node)!;
     debug('enter %j, value is %j', node.name, value);
 

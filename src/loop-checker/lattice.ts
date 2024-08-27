@@ -7,7 +7,7 @@ const WORD_FILL = -1 | 0;
 
 assert.strictEqual(MAX_VALUE % WORD_SIZE, 0);
 
-export type LatticeValue = 'empty' | ReadonlyArray<number> | 'any';
+export type LatticeValue = 'empty' | readonly number[] | 'any';
 
 /**
  * A fixed-size bitfield, really
@@ -84,7 +84,7 @@ export class Lattice {
     }
   }
 
-  public toJSON(): any {
+  public toJSON(): string | readonly number[] {
     let isEmpty = true;
     let isFull = true;
     for (let i = 0; i < SIZE; i++) {

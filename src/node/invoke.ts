@@ -8,9 +8,7 @@ import { Node } from './base';
  * Map of return codes of the callback. Each key is a return code,
  * value is the target node that must be executed upon getting such return code.
  */
-export interface IInvokeMap {
-  readonly [key: number]: Node;
-}
+export type IInvokeMap = Readonly<Record<number, Node>>;
 
 /**
  * This node invokes either external callback or intrinsic code and passes the

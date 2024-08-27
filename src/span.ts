@@ -1,5 +1,3 @@
-import * as assert from 'assert';
-
 import { Span as SpanCallback } from './code';
 import { Node, SpanEnd, SpanStart } from './node';
 
@@ -8,8 +6,8 @@ import { Node, SpanEnd, SpanStart } from './node';
  * span start will be sent to the span callback until span end is called.
  */
 export class Span {
-  private readonly startCache: Map<Node, SpanStart> = new Map();
-  private readonly endCache: Map<Node, SpanEnd> = new Map();
+  private readonly startCache = new Map<Node, SpanStart>();
+  private readonly endCache = new Map<Node, SpanEnd>();
 
   /**
    * @param callback  External callback, must be `code.span(...)` result.

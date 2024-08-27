@@ -64,12 +64,12 @@ export abstract class Node {
   }
 
   /** Get list of all non-otherwise edges. */
-  public getEdges(): ReadonlyArray<Edge> {
+  public getEdges(): readonly Edge[] {
     return this.privEdges;
   }
 
   /** Get list of all edges (including otherwise, if present). */
-  public getAllEdges(): ReadonlyArray<Edge> {
+  public getAllEdges(): readonly Edge[] {
     const res = this.privEdges;
     if (this.otherwiseEdge === undefined) {
       return res;

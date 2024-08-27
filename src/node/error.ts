@@ -15,10 +15,10 @@ class NodeError extends Node {
   }
 
   /** `.otherwise()` is not supported on this type of node */
-  public otherwise(node: Node): this { throw new Error('Not supported'); }
+  public otherwise(): this { throw new Error('Not supported'); }
 
   /** `.skipTo()` is not supported on this type of node */
-  public skipTo(node: Node): this { throw new Error('Not supported'); }
+  public skipTo(): this { throw new Error('Not supported'); }
 }
 
 export { NodeError as Error };
