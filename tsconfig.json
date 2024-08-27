@@ -1,15 +1,12 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "es2017",
+    "target": "ES2022",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./lib",
+    "outDir": "./.tmptest",
     "declaration": true,
     "pretty": true,
     "sourceMap": true
-  },
-  "include": [
-    "src/**/*.ts"
-  ]
+  }
 }

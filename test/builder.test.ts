@@ -1,5 +1,4 @@
-import * as assert from 'assert';
-
+import { beforeEach, describe, it, type TestContext } from 'node:test';
 import { Builder } from '../src/builder';
 
 describe('LLParse/Builder', () => {
@@ -8,7 +7,7 @@ describe('LLParse/Builder', () => {
     b = new Builder();
   });
 
-  it('should build primitive graph', () => {
+  it('should build primitive graph', (t: TestContext) => {
     const start = b.node('start');
     const end = b.node('end');
 
@@ -21,61 +20,59 @@ describe('LLParse/Builder', () => {
       .skipTo(start);
 
     const edges = start.getEdges();
-    assert.strictEqual(edges.length, 2);
-
-    assert(!edges[0].noAdvance);
-    assert.strictEqual(edges[0].node, start);
-
-    assert(edges[1].noAdvance);
-    assert.strictEqual(edges[1].node, end);
+    t.assert.strictEqual(edges.length, 2);
+    t.assert.ok(!edges[0].noAdvance);
+    t.assert.strictEqual(edges[0].node, start);
+    t.assert.ok(edges[1].noAdvance);
+    t.assert.strictEqual(edges[1].node, end);
   });
 
-  it('should disallow duplicate edges', () => {
+  it('should disallow duplicate edges', (t: TestContext) => {
     const start = b.node('start');
 
     start.peek('e', start);
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       start.peek('e', start);
     }, /duplicate edge/);
   });
 
-  it('should disallow select to non-invoke', () => {
+  it('should disallow select to non-invoke', (t: TestContext) => {
     const start = b.node('start');
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       start.select('a', 1, start);
     }, /value to non-Invoke/);
   });
 
-  it('should disallow select to match-invoke', () => {
+  it('should disallow select to match-invoke', (t: TestContext) => {
     const start = b.node('start');
     const invoke = b.invoke(b.code.match('something'));
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       start.select('a', 1, invoke);
     }, /Invalid.*code signature/);
   });
 
-  it('should disallow peek to value-invoke', () => {
+  it('should disallow peek to value-invoke', (t: TestContext) => {
     const start = b.node('start');
     const invoke = b.invoke(b.code.value('something'));
 
-    assert.throws(() => {
+    t.assert.throws(() => {
       start.peek('a', invoke);
     }, /Invalid.*code signature/);
   });
 
-  it('should allow select to value-invoke', () => {
+  it('should allow select to value-invoke', (t: TestContext) => {
     const start = b.node('start');
     const invoke = b.invoke(b.code.value('something'));
 
-    assert.doesNotThrow(() => {
+    t.assert.doesNotThrow(() => {
       start.select('a', 1, invoke);
     });
   });
 
-  it('should create edges for Invoke', () => {
+  it('should create edges for Invoke', (t: TestContext) => {
     const start = b.node('start');
     const invoke = b.invoke(b.code.value('something'), {
       '-1': start,
@@ -85,7 +82,7 @@ describe('LLParse/Builder', () => {
 
     const edges = invoke.getEdges();
     const keys = edges.map((edge) => edge.key!);
-    assert.deepStrictEqual(keys, [
+    t.assert.deepStrictEqual(keys, [
       -1,
       1,
       10,

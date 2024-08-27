@@ -9,11 +9,11 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf lib",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf lib && rm -rf .tmptest",
     "prepare": "npm run clean && npm run build",
     "lint": "tslint -c tslint.json src/*.ts src/**/*.ts src/**/**/*.ts test/*.ts",
-    "test": "mocha -r ts-node/register/type-check --reporter spec test/*-test.ts"
+    "test": "borp test/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -33,12 +33,10 @@
   "homepage": "https://github.com/indutny/llparse-builder#readme",
   "devDependencies": {
     "@types/debug": "4.1.5  ",
-    "@types/mocha": "^8.0.3",
-    "@types/node": "^14.11.8",
-    "mocha": "^8.1.3",
-    "ts-node": "^9.0.0",
+    "@types/node": "^20.16.1",
+    "borp": "^0.17.0",
     "tslint": "^5.20.1",
-    "typescript": "^4.0.3"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "binary-search": "^1.3.6",
