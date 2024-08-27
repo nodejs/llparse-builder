@@ -1,11 +1,10 @@
-import * as assert from 'assert';
-import * as debugAPI from 'debug';
+import { debuglog } from 'node:util';
 
 import { Node } from '../node';
 import { Reachability } from '../reachability';
 import { Lattice } from './lattice';
 
-const debug = debugAPI('llparse-builder:loop-checker');
+const debug = debuglog('llparse-builder:loop-checker');
 
 const EMPTY_VALUE = new Lattice('empty');
 const ANY_VALUE = new Lattice('any');
