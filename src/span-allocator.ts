@@ -1,11 +1,11 @@
-import * as assert from 'assert';
-import * as debugAPI from 'debug';
+import * as assert from 'node:assert';
+import { debuglog } from 'node:util';
 
 import { Node, SpanEnd, SpanStart } from './node';
 import { Reachability } from './reachability';
 import { Span } from './span';
 
-const debug = debugAPI('llparse-builder:span-allocator');
+const debug = debuglog('llparse-builder:span-allocator');
 
 type SpanSet = Set<Span>;
 
