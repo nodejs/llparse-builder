@@ -72,7 +72,7 @@ export class LoopChecker {
     debug('propagate(%j), initial value %j', node.name, value);
 
     // Terminate values that are consumed by `match`/`select`
-    const terminated = this.terminate(node, value, changed);
+    const terminated = this.terminate(node);
     if (!terminated.isEqual(EMPTY_VALUE)) {
       debug('node %j terminates %j', node.name, terminated);
       value = value.subtract(terminated);
