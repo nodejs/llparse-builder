@@ -38,6 +38,22 @@ export class Builder {
     return new node.Match(name);
   }
 
+  public intBE(name: string, bytes: number): node.Int {
+    return new node.Int(name, bytes, true, false);
+  }
+
+  public intLE(name: string, bytes: number): node.Int {
+    return new node.Int(name, bytes, true, true);
+  }
+
+  public uIntBE(name: string, bytes: number): node.Int {
+    return new node.Int(name, bytes, false, false);
+  }
+
+  public uIntLE(name: string, bytes: number): node.Int {
+    return new node.Int(name, bytes, false, true);
+  }
+
   /**
    * Create terminal error node. Returns error code to user, and sets reason
    * in the parser's state object.
