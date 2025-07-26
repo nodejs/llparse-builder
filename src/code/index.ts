@@ -13,3 +13,4 @@ export { Store } from './store';
 export { Test } from './test';
 export { Update } from './update';
 export { Value } from './value';
+export { Unpack, Endianess } from './unpack';
