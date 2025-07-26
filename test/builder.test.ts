@@ -1,5 +1,5 @@
 import { beforeEach, describe, it, type TestContext } from 'node:test';
-import { Builder } from '../src/builder';
+import { Builder, Endianess } from '../src/builder';
 
 describe('LLParse/Builder', () => {
   let b: Builder;
@@ -88,4 +88,18 @@ describe('LLParse/Builder', () => {
       10,
     ]);
   });
+
+  it('should create an unpack for Invoke'), (t: TestContext) => {
+    const start = b.node('start');
+    b.property('i16', 'unpack_value');
+    const unpack_error = b.error(0, 'failed to unpack value');
+    const invoke = b.invoke(
+      b.code.unpack('unpack_value', Endianess.Little),
+      start, unpack_error
+    );
+    const otherwise = invoke.getOtherwiseEdge();
+    t.assert.deepStrictEqual(
+      otherwise?.node, unpack_error
+    );
+  }
 });

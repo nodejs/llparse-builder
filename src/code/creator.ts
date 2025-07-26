@@ -184,14 +184,17 @@ export class Creator {
 
   /** 
    * Intrinsic operation.
+   * 
    *  state[field] <<= 8 or >>= 8 (depending on endianess)  
-   *  return 0;
+   *  state[field] |= value
+   *  return (state[field] < (property size limit)) ? 0 : -1;
+   * 
    * @param field Property Name
    * @param endianness Endianness Enum to determine if big 
    * or little endianness should be accounted for.
+   * defaults to `Endianess.Little`
    */
   public unpack(field: string, endianness?: code.Endianess) : code.Unpack {
-      return new code.Unpack(field, endianness);
+    return new code.Unpack(field, endianness);
   }
-
 }

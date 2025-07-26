@@ -5,6 +5,7 @@ import { Span } from './span';
 import * as transform from './transform';
 
 export { code, node, transform, Property, PropertyType, Span };
+export { Endianess } from "./code";
 export { Edge } from './edge';
 export { LoopChecker } from './loop-checker';
 export { ISpanAllocatorResult, SpanAllocator } from './span-allocator';
@@ -71,6 +72,8 @@ export class Builder {
   public invoke(fn: code.Code, map?: node.IInvokeMap | node.Node,
                 otherwise?: node.Node): node.Invoke {
     let res: node.Invoke;
+
+    // TODO: (Vizonex) Should we add a check for non-existant unpack properties here? 
 
     // `.invoke(name)`
     if (map === undefined) {
