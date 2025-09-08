@@ -34,7 +34,7 @@
   "homepage": "https://github.com/indutny/llparse-builder#readme",
   "devDependencies": {
     "@eslint/js": "10.0.0",
-    "@stylistic/eslint-plugin": "^2.1.0",
+    "@stylistic/eslint-plugin": "^5.3.1",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.1.0",
     "@typescript-eslint/eslint-plugin": "^8.0.1",
