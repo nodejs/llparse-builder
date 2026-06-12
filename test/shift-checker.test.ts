@@ -64,9 +64,9 @@ describe ('LLParse/ShiftChecker', () => {
         
     /* hypothetically let's say we have an uint32_t in C but we only 
         need to pack a i16 bit integer, this is valid use-case because we can safely
-        back it even if the property is bigger than itself. */
+        pack it even if the property is bigger than itself. */
     b.property('i32', "defined");
-        
+
     start
       .otherwise(rshift);
     rshift.skipTo(start);
