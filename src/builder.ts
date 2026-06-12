@@ -7,6 +7,7 @@ import * as transform from './transform';
 export { code, node, transform, Property, PropertyType, Span };
 export { Edge } from './edge';
 export { LoopChecker } from './loop-checker';
+export { ShiftChecker } from './shift-checker';
 export { ISpanAllocatorResult, SpanAllocator } from './span-allocator';
 export { Reachability } from './reachability';
 
@@ -110,6 +111,34 @@ export class Builder {
    */
   public pause(errorCode: number, reason: string): node.Pause {
     return new node.Pause(errorCode, reason);
+  }
+
+  // Shift
+
+  /**
+   * Create a node that packs bits into a field in 
+   * little endian format. 
+   * 
+   *   state[field] <<= value;
+   *
+   * This node does not provide otherwise as this node must
+   * consume bytes upon execution.
+   */
+  public lshift(field: string, bits: number): node.Shift {
+    return new node.Shift(field, bits, true);
+  }
+
+  /**
+   * Create a node that packs bits into a field in 
+   * big endian format. 
+   * 
+   *   state[field] >>= value;
+   *
+   * This node does not provide otherwise as this node must
+   * consume bytes upon execution.
+   */
+  public rshift(field: string, bits: number): node.Shift {
+    return new node.Shift(field, bits, false);
   }
 
   // Span
